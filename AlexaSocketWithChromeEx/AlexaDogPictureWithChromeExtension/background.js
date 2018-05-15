@@ -20,10 +20,10 @@ function refresh() {
                 console.log("The Dog image is " + dogNumber);
                 oldDogNumber = dogNumber;
                 if (oldDogNumber > 0 && oldDogNumber < 5) {
-                    var openImage = "http://localhost:33/page" + oldDogNumber + ".html";
+                    var openImage = "http://localhost:1000/page" + oldDogNumber + ".html";
                     chrome.tabs.create({ url: openImage });
                 } else {
-                    var openImage = "http://localhost:33//pageAll.html";
+                    var openImage = "http://localhost:1000//index.html";
                     chrome.tabs.create({ url: openImage });
                 }
             }
