@@ -1,31 +1,47 @@
-var oldDogNumber;
-
+var oldtabName;
 function refresh() {
-    // if (arguments[0]) {
-    //     var newURL = "file:///C:/Users/Premalatha/Desktop/Alexa%20Arun/dogPictureAlexa/index.html";
-    //     chrome.tabs.create({ url: newURL });
-    // }
-    // console.log('Refresh called..!');
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "https://ayunk5urzl.execute-api.us-east-1.amazonaws.com/prod", true);
+    xhttp.open("GET", "https://htnob2qsd3.execute-api.us-east-1.amazonaws.com/XcpChrome", true);
     xhttp.send();
     xhttp.addEventListener("readystatechange", processRequest, false);
-
     function processRequest(e) {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var response = JSON.parse(xhttp.responseText);
-            var dogNumber = response.dogPicture;
-            //console.log(oldDogNumber);
-            if (oldDogNumber != dogNumber) {
-                console.log("The Dog image is " + dogNumber);
-                oldDogNumber = dogNumber;
-                if (oldDogNumber > 0 && oldDogNumber < 5) {
-                    var openImage = "http://localhost:1000/page" + oldDogNumber + ".html";
-                    chrome.tabs.create({ url: openImage });
-                } else {
-                    var openImage = "http://localhost:1000//index.html";
-                    chrome.tabs.create({ url: openImage });
-                }
+            var tabName = response.tabName;
+            console.log(oldtabName);
+            if (oldtabName !== tabName) {
+                console.log("The tabName is " + tabName);
+                oldtabName = tabName;
+                    var openImage = "http://192.168.1.187:8000/custom_Widgets/?reload#application/cstm_"+tabName;
+                    var openImageURL = new URL(openImage);
+                    var newImageOrgin = openImageURL.origin;
+                    if(tabName=="resultlist test"){
+                        openImage = "http://192.168.1.187:8000/custom_Widgets/?reload#application/cstm_resultlist_test";
+                    }
+                    chrome.windows.getAll({ populate: true }, function (windows) {
+                        windows.forEach(function (window) {
+                            var tabs = window.tabs;
+                            var tabs_length = tabs.length;
+                            var tab_count = 0;
+                            for (var i = 0; i < tabs_length; i++) {
+                                var tab = tabs[i];
+                                var tabURL = tab.url;
+                                var origin = new URL(tabURL).origin;
+                                var tabID = tab.id;
+                                tab_count++;
+                                if (newImageOrgin == origin) {
+                                    chrome.tabs.update(tabID, { highlighted: true, url: openImage }, function (tab) {
+                                        console.log(tab.url);
+                                        console.log("update");
+                                    });
+                                    break;
+                                }
+                                if (tabs_length == tab_count) {
+                                    chrome.tabs.create({ url: openImage });
+                                }
+                            }
+                        });
+                    });
             }
             setTimeout(refresh.bind(false), 1000);
         }
@@ -34,12 +50,34 @@ function refresh() {
 refresh(true);
 
 
+
+// function gettingAllTabs(callback) {
+
+//     chrome.windows.getAll({ populate: true }, function (window_list) {
+//         var list = [];
+//         for (var i = 0; i < window_list.length; i++) {
+//             list = list.concat(window_list[i].tabs);
+//         }
+//         if (callback) {
+//             callback(list);
+//         }
+//     });
+// }
+
+
+
+
+
+
+
 // chrome.windows.getAll({ populate: true }, function (windows) {
 //     windows.forEach(function (window) {
 //         console.log(window);
 //         window.tabs.forEach(function (tab) {
 //             //collect all of the urls here, I will just log them instead
-//             //  console.log(tab.orign);
+//             var tabURL = tab.url;
+//             var origin = new URL(tabURL).origin;
+//             console.log(origin);
 //         });
 //     });
 // });

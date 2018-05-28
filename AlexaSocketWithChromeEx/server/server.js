@@ -9,8 +9,8 @@ const express = require('express');
 
 const socketIO = require('socket.io');
 
-//inbuild model, it's used for connect the socketsocket
-const http = require('http');
+//inbuild model, it's used for connect the socket                                     
+const http = require('http');  
 
 //middleware connecion
 const alexaDogPic = path.join(__dirname, '../AlexaDogPictureWithChromeExtension');
